@@ -1,9 +1,12 @@
 package project.com.Recruitment.repository;
 
-import org.springframework.data.jpa.repository.EntityGraph;
+import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+
 import project.com.Recruitment.model.Person;
-import java.util.*;
 
 public interface PersonRepository extends JpaRepository<Person, Long> {
     
@@ -19,7 +22,9 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
      * @param roleId   1 or 2, 1 = recruiter, 2 = applicants
      * @return  List of persons with param role_id
      */
-    List<Person> findByRoleId(Long roleId);
+    //List<Person> findByRoleId(Long roleId);
+    //OBS! Testar att använda Page istället för List
+    Page<Person> findByRoleId(Long roleId, Pageable pageable);
 
     /**
      * Finds and returns a person object for specific application info
