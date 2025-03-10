@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import project.com.Recruitment.dto.LoginDTO;
 import project.com.Recruitment.dto.RegisterDTO;
+import project.com.Recruitment.exceptions.IllegalLoginException;
 import project.com.Recruitment.exceptions.IllegalRegistrationException;
 import project.com.Recruitment.model.Person;
 import project.com.Recruitment.repository.PersonRepository;
@@ -28,7 +29,7 @@ public class PersonService{
      * @return true if the user is validated, false otherwise
      */
     @Transactional(readOnly = true)
-    public boolean validateUser(LoginDTO loginDTO) {
+    public boolean validateUser(LoginDTO loginDTO) throws IllegalLoginException{
         Optional<Person> person = personRepository.findByUsername(loginDTO.getUsername());
 
         if (person.isPresent()) {
@@ -36,10 +37,10 @@ public class PersonService{
             if (storedPassword.equals(loginDTO.getPassword())) {
                 return true;
             } else {
-                return false;
+                throw new IllegalLoginException("Password incorrect");
             }
         } else {
-            return false;
+            throw new IllegalLoginException("Username: " + loginDTO.getUsername() + " not found");
         }
     }
 

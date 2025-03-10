@@ -20,7 +20,7 @@ public class RegisterDTO {
 
     private String pnr;
 
-    private int role_id; // används inte för tillfället då vi sätter alla nya users till role_id 1 i PersonService
+    private int role_id;
 
     public RegisterDTO() {
         

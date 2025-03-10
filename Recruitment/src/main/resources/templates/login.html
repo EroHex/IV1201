@@ -11,6 +11,9 @@
     <span style="color: red;" th:if="${#fields.hasErrors('loginDTO.*')}">
         <li th:each="error : ${#fields.errors('loginDTO.*')}" th:text="${error}"></li>
     </span>
+    <p th:if="${errorType == 'generic'}" th:text="${errorMsg}"></p>
+    <p th:if="${errorType == 'usernameError'}" th:text="${errorMsg}"></p>
+    <p th:if="${errorType == 'passwordError'}" th:text="${errorMsg}"></p>
     <form th:action="@{/login}" th:object="${loginDTO}" method="post" id="loginForm">
         <p>Username:</p>
         <input type="text" th:field="*{username}" required><br>

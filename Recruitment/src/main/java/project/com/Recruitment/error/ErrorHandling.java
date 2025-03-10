@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.ui.Model;
 
 import project.com.Recruitment.dto.RegisterDTO;
+import project.com.Recruitment.dto.LoginDTO;
 import project.com.Recruitment.exceptions.IllegalRegistrationException;
+import project.com.Recruitment.exceptions.IllegalLoginException;
 
 @ControllerAdvice
 public class ErrorHandling{
@@ -18,10 +20,13 @@ public class ErrorHandling{
     public static final String USERNAME_ERROR = "usernameError";
     public static final String EMAIL_ERROR = "emailError";
     public static final String PSN_ERROR = "psnError";
+    public static final String PASSWORD_ERROR = "passwordError";
     public static final String REGISTER_DTO = "registerDTO";
+    public static final String LOGIN_DTO = "loginDTO";
 
     public static final String ERROR_URL = "error";
     public static final String REGISTER_URL = "register";
+    public static final String LOGIN_URL = "login";
 
     /*
      * Method to handle IllegalRegistrationException
@@ -46,6 +51,27 @@ public class ErrorHandling{
         model.addAttribute(REGISTER_DTO, new RegisterDTO());
         model.addAttribute(ERROR_MSG, e.getMessage());
         return REGISTER_URL;
+    }
+    /*
+     * Method to handle IllegalLoginException
+     * @param e the exception
+     * @param model the model to add attributes to
+     * @return the login view with the error message
+     */
+    @ExceptionHandler(IllegalLoginException.class)
+    public String exceptionHandler(IllegalLoginException e, Model model) {
+        if (e.getMessage().toLowerCase().contains("username")) {
+            model.addAttribute(ERROR_TYPE, USERNAME_ERROR);
+            
+        } else if (e.getMessage().toLowerCase().contains("password")) {
+            model.addAttribute(ERROR_TYPE, PASSWORD_ERROR);
+
+        } else {
+            model.addAttribute(ERROR_TYPE, GENERIC_ERROR);
+        }
+        model.addAttribute(LOGIN_DTO, new LoginDTO());
+        model.addAttribute(ERROR_MSG, e.getMessage());
+        return LOGIN_URL;
     }
     /*
      * Method to handle all other exceptions

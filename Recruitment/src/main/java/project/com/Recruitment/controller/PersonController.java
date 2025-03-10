@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import project.com.Recruitment.dto.LoginDTO;
 import project.com.Recruitment.dto.RegisterDTO;
+import project.com.Recruitment.exceptions.IllegalLoginException;
 import project.com.Recruitment.exceptions.IllegalRegistrationException;
 import project.com.Recruitment.model.Person;
 import project.com.Recruitment.service.PersonService;
@@ -108,20 +109,15 @@ public class PersonController {
      * @return the corresponding html page
      */
     @PostMapping(DEFAULT_PAGE_URL + LOGIN_PAGE_URL)
-    public String login(@Valid LoginDTO loginDTO, BindingResult bindingResult, HttpSession session, Model model) {
+    public String login(@Valid LoginDTO loginDTO, BindingResult bindingResult, HttpSession session, Model model) throws IllegalLoginException{
         if (bindingResult.hasErrors()) {
             model.addAttribute("error", "Validation failed: " + bindingResult.getAllErrors());
             return LOGIN_PAGE_URL;
         }
-        boolean validUser = personService.validateUser(loginDTO); //skicka till service för databas hantering
-        if (validUser) {
-            Person person = personService.getPersonByUsername(loginDTO.getUsername());
-            session.setAttribute("loggedInUser", person);
-            return "redirect:" + DEFAULT_PAGE_URL; // Redirect to home page after successful login
-        } else {
-            model.addAttribute("error", "Invalid username or password. Please try again.");
-            return LOGIN_PAGE_URL; // Return to login page with error message
-        }
+        personService.validateUser(loginDTO); //skicka till service för databas hantering
+        Person person = personService.getPersonByUsername(loginDTO.getUsername());
+        session.setAttribute("loggedInUser", person);
+        return "redirect:" + DEFAULT_PAGE_URL; // Redirect to home page after successful login
     }
     /**
      * Method to log out the user
