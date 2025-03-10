@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,35 +16,29 @@ import project.com.Recruitment.model.Person;
 import project.com.Recruitment.repository.PersonRepository;
 
 @Service
+@Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
 public class PersonService{
     
     @Autowired
     private PersonRepository personRepository;
-
 
     /**
      * Method to validate a user
      * @param loginDTO the login data
      * @return true if the user is validated, false otherwise
      */
-    @Transactional(readOnly = true, propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
+    @Transactional(readOnly = true)
     public boolean validateUser(LoginDTO loginDTO) {
         Optional<Person> person = personRepository.findByUsername(loginDTO.getUsername());
 
         if (person.isPresent()) {
             String storedPassword = person.get().getPassword();
-            System.out.println("Stored password: " + storedPassword); //visas bara i cmd för debugging
-            System.out.println("Entered password: " + loginDTO.getPassword());
-
             if (storedPassword.equals(loginDTO.getPassword())) {
-                System.out.println("Password match for person: " + loginDTO.getUsername());
                 return true;
             } else {
-                System.out.println("Incorrect password for person: " + loginDTO.getUsername());
                 return false;
             }
         } else {
-            System.out.println("No person found with username: " + loginDTO.getUsername());
             return false;
         }
     }
@@ -55,7 +48,7 @@ public class PersonService{
      * @param username the username to search for
      * @return the person if found, otherwise null
      */
-    @Transactional(readOnly = true, propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
+    @Transactional(readOnly = true)
     public Person getPersonByUsername(String username) {
         Optional<Person> person = personRepository.findByUsername(username);
         return person.orElse(null);
@@ -68,7 +61,7 @@ public class PersonService{
      * @throws IllegalRegistrationException if there exists duplicate data
     */
     
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
+    @Transactional(readOnly = false)
     public Person registerPerson(RegisterDTO registerDTO) throws IllegalRegistrationException {
         if (personRepository.findByUsername(registerDTO.getUsername()).isPresent()) {
             throw new IllegalRegistrationException("Username already exists!");
@@ -88,14 +81,10 @@ public class PersonService{
      * 2L is for filtering role_id to only show applicants 
      * @return a list of persons with their applications
      */
-    @Transactional(readOnly = true, propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
+    @Transactional(readOnly = true)
     public Page<Person> getAllApplications(Pageable pageable) {
         return personRepository.findByRoleId(2L, pageable); // Only fetch persons with role_id = 2
     }
-    //OBS! Testar att använda Page istället för List
-    /*public List<Person> getAllApplications() {
-        return personRepository.findByRoleId(2L); // Only fetch persons with role_id = 2
-    }*/
 
     /**
      * Method to retrieve person by their specified id, used when getting a single application based on the search url
@@ -103,7 +92,7 @@ public class PersonService{
      * @param id the id of the person to search for
      * @return a person object or empty Optional object if one couldn't be found
      */
-    @Transactional(readOnly = true, propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
+    @Transactional(readOnly = true)
     public Optional<Person> getPersonById(Long id){
         return personRepository.findByPersonId(id);
     }

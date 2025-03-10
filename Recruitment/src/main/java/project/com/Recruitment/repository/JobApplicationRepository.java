@@ -7,10 +7,14 @@ import org.springframework.stereotype.Repository;
 
 import project.com.Recruitment.model.JobApplication;
 
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 /**
  * The repository, which allows access to applications stored in the database
  */
 @Repository
+@Transactional(propagation = Propagation.MANDATORY)
 public interface JobApplicationRepository extends JpaRepository<JobApplication, Long>{
 
     /**

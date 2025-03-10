@@ -4,10 +4,13 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 
-import jakarta.transaction.Transactional;
 import project.com.Recruitment.model.JobApplication;
 import project.com.Recruitment.repository.JobApplicationRepository;
+
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * The service is responsible for handling the business logic.
@@ -15,7 +18,7 @@ import project.com.Recruitment.repository.JobApplicationRepository;
  *
  */
 @Service
-@Transactional
+@Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
 public class JobApplicationService {
 
     private JobApplicationRepository jobApplicationRepository;

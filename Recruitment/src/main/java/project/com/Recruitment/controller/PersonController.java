@@ -110,7 +110,6 @@ public class PersonController {
         if (validUser) {
             Person person = personService.getPersonByUsername(loginDTO.getUsername());
             session.setAttribute("loggedInUser", person);
-            System.out.println("User logged in: " + person);
             return "redirect:" + DEFAULT_PAGE_URL; // Redirect to home page after successful login
         } else {
             model.addAttribute("error", "Invalid username or password. Please try again.");
@@ -140,17 +139,15 @@ public class PersonController {
      */
     @GetMapping(DEFAULT_PAGE_URL + MANAGEAPPLICATIONS_PAGE_URL)
     public String manageApplications(Model model, HttpSession session, @RequestParam(defaultValue="0") int page) {
-        System.out.println("Is logged in: " + isLoggedIn(session));
         if (!(isLoggedIn(session))) {
             return "redirect:" + DEFAULT_PAGE_URL + LOGIN_PAGE_URL;
         }
-        System.out.println("Is admin: " + isAdmin(session));
         if (!(isAdmin(session))) {
             return "redirect:" + DEFAULT_PAGE_URL;
         }
         //<Person> applications = personService.getAllApplications();
         //OBS! Testar att använda Page istället för List!!
-        Page<Person> applications = personService.getAllApplications(PageRequest.of(page, 20));
+        Page<Person> applications = personService.getAllApplications(PageRequest.of(page, 5));
         model.addAttribute("applications", applications.getContent());
         model.addAttribute("currentPage", applications.getNumber());
         model.addAttribute("totalPages", applications.getTotalPages());
@@ -165,11 +162,9 @@ public class PersonController {
      */
     @GetMapping(DEFAULT_PAGE_URL + REVIEWAPPLICATION_PAGE_URL)
     public String reviewApplication(@RequestParam(value = "id", required = false) Long id, Model model, HttpSession session) {
-        System.out.println("Is logged in: " + isLoggedIn(session));
         if (!(isLoggedIn(session))) {
             return "redirect:" + DEFAULT_PAGE_URL + LOGIN_PAGE_URL;
         }
-        System.out.println("Is admin: " + isAdmin(session));
         if (!(isAdmin(session))) {
             return "redirect:" + DEFAULT_PAGE_URL;
         }
