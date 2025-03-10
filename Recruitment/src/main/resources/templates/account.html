@@ -11,7 +11,10 @@
     <p>First Name: <span th:text="${session.loggedInUser.name}">First name missing</span></p>
     <p>Last Name: <span th:text="${session.loggedInUser.surname}">Last name missing</span></p>
     <p>Person Number: <span th:text="${session.loggedInUser.pnr}">Person number missing</span></p>
-    <p>Role: <span th:text="${session.loggedInUser.roleId}">Role missing</span></p>
+    <p>Role: 
+        <span th:if="${session.loggedInUser.roleId == 1}" th:text="'Admin'">Role missing</span>
+        <span th:if="${session.loggedInUser.roleId == 2}" th:text="'Applicant'">Role missing</span>
+    </p>
     <br>
     <div th:if="${session.loggedInUser.roleId == 1}">
         <button onclick="window.location.href='/manage-applications'">Go to Manage Applications page</button>

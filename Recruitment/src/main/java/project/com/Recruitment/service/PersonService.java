@@ -56,7 +56,7 @@ public class PersonService{
     
     /**
      * Method to register a new person
-     * @param registerDTO the data to register
+     * @param registerDTO the data to registration
      * @return the person that was registered
      * @throws IllegalRegistrationException if there exists duplicate data
     */

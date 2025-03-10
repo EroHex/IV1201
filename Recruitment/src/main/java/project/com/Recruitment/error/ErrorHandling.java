@@ -23,7 +23,12 @@ public class ErrorHandling{
     public static final String ERROR_URL = "error";
     public static final String REGISTER_URL = "register";
 
-
+    /*
+     * Method to handle IllegalRegistrationException
+     * @param e the exception
+     * @param model the model to add attributes to
+     * @return the register view with the error message
+     */
     @ExceptionHandler(IllegalRegistrationException.class)
     public String exceptionHandler(IllegalRegistrationException e, Model model) {
         if (e.getMessage().toLowerCase().contains("username")) {
@@ -42,7 +47,12 @@ public class ErrorHandling{
         model.addAttribute(ERROR_MSG, e.getMessage());
         return REGISTER_URL;
     }
-
+    /*
+     * Method to handle all other exceptions
+     * @param e the exception
+     * @param model the model to add attributes to
+     * @return the error view with the error message
+     */
     @ExceptionHandler(Exception.class)
     public String exceptionHandler(Exception e, Model model){
         model.addAttribute(ERROR_TYPE, GENERIC_ERROR);

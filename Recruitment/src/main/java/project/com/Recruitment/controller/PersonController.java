@@ -99,7 +99,14 @@ public class PersonController {
         model.addAttribute("registerDTO", new RegisterDTO());
         return REGISTER_PAGE_URL; // hittar filen i src/main/resources/templates/register.html
     }
-
+    /**
+     * Method to log in the user
+     * @param loginDTO the data to log in
+     * @param bindingResult the result of the binding
+     * @param session the session to store the logged in user
+     * @param model the model to pass to the view
+     * @return the corresponding html page
+     */
     @PostMapping(DEFAULT_PAGE_URL + LOGIN_PAGE_URL)
     public String login(@Valid LoginDTO loginDTO, BindingResult bindingResult, HttpSession session, Model model) {
         if (bindingResult.hasErrors()) {
@@ -116,13 +123,23 @@ public class PersonController {
             return LOGIN_PAGE_URL; // Return to login page with error message
         }
     }
-
+    /**
+     * Method to log out the user
+     * @param session the session to invalidate
+     * @return the login page
+     */
     @PostMapping(DEFAULT_PAGE_URL + LOGOUT_PAGE_URL)
     public String logout(HttpSession session) {
         session.invalidate(); // Invalidate the session to log out the user
         return "redirect:" + DEFAULT_PAGE_URL + LOGIN_PAGE_URL; // Redirect to login page after logout
     }
-    
+    /*
+     * Method to register a new user
+     * @param registerDTO the data to register
+     * @param bindingResult the result of the binding
+     * @param model the model to pass to the view
+     * @return the corresponding html page
+     */
     @PostMapping(DEFAULT_PAGE_URL + REGISTER_PAGE_URL)
     public String register(@Valid RegisterDTO registerDTO, BindingResult bindingResult, Model model) throws IllegalRegistrationException {
         if (bindingResult.hasErrors()) {
@@ -133,8 +150,9 @@ public class PersonController {
     }
     /**
      * Method to show the manage applications page
-     * @param model 
+     * @param model
      * @param session 
+     * @param page The page number to show
      * @return The manage-applications view found in /resources/templates
      */
     @GetMapping(DEFAULT_PAGE_URL + MANAGEAPPLICATIONS_PAGE_URL)
