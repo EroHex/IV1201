@@ -1,22 +1,22 @@
 package project.com.Recruitment.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
-import project.com.Recruitment.service.PersonService;
-import project.com.Recruitment.dto.RegisterDTO;
-import project.com.Recruitment.dto.LoginDTO;
-import jakarta.validation.*;
-import org.springframework.validation.*;
-import project.com.Recruitment.exceptions.IllegalRegistrationException;
-import project.com.Recruitment.model.Person;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+import project.com.Recruitment.dto.LoginDTO;
+import project.com.Recruitment.dto.RegisterDTO;
+import project.com.Recruitment.exceptions.IllegalRegistrationException;
+import project.com.Recruitment.model.Person;
+import project.com.Recruitment.service.PersonService;
 @Controller
 // @RequestMapping("/person")
 public class PersonController {
@@ -139,7 +139,7 @@ public class PersonController {
      * @return The manage-applications view found in /resources/templates
      */
     @GetMapping(DEFAULT_PAGE_URL + MANAGEAPPLICATIONS_PAGE_URL)
-    public String manageApplications(Model model, HttpSession session) {
+    public String manageApplications(Model model, HttpSession session, @RequestParam(defaultValue="0") int page) {
         System.out.println("Is logged in: " + isLoggedIn(session));
         if (!(isLoggedIn(session))) {
             return "redirect:" + DEFAULT_PAGE_URL + LOGIN_PAGE_URL;
@@ -148,8 +148,13 @@ public class PersonController {
         if (!(isAdmin(session))) {
             return "redirect:" + DEFAULT_PAGE_URL;
         }
-        List<Person> applications = personService.getAllApplications();
-        model.addAttribute("applications", applications);
+        //<Person> applications = personService.getAllApplications();
+        //OBS! Testar att använda Page istället för List!!
+        //Update 2025-03-09: It was stuck at page 0, changed to PageRequest.of(page, 20) and now it seemingly updates dynamically
+        Page<Person> applications = personService.getAllApplications(PageRequest.of(page, 20));
+        model.addAttribute("applications", applications.getContent());
+        model.addAttribute("currentPage", applications.getNumber());
+        model.addAttribute("totalPages", applications.getTotalPages());
         return MANAGEAPPLICATIONS_PAGE_URL;
     }
 

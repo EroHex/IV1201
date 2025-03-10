@@ -1,17 +1,20 @@
 package project.com.Recruitment.service;
 
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Isolation;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import project.com.Recruitment.dto.LoginDTO;
+import project.com.Recruitment.dto.RegisterDTO;
+import project.com.Recruitment.exceptions.IllegalRegistrationException;
 import project.com.Recruitment.model.Person;
 import project.com.Recruitment.repository.PersonRepository;
-import java.util.*;
-import project.com.Recruitment.dto.RegisterDTO;
-import project.com.Recruitment.dto.LoginDTO;
-import project.com.Recruitment.exceptions.*;
 
 @Service
 public class PersonService{
@@ -86,9 +89,13 @@ public class PersonService{
      * @return a list of persons with their applications
      */
     @Transactional(readOnly = true, propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
-    public List<Person> getAllApplications() {
-        return personRepository.findByRoleId(2L); // Only fetch persons with role_id = 2
+    public Page<Person> getAllApplications(Pageable pageable) {
+        return personRepository.findByRoleId(2L, pageable); // Only fetch persons with role_id = 2
     }
+    //OBS! Testar att använda Page istället för List
+    /*public List<Person> getAllApplications() {
+        return personRepository.findByRoleId(2L); // Only fetch persons with role_id = 2
+    }*/
 
     /**
      * Method to retrieve person by their specified id, used when getting a single application based on the search url
