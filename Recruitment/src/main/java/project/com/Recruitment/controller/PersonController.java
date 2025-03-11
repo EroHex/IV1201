@@ -86,7 +86,10 @@ public class PersonController {
      * @return The login view found in /resources/templates
      */
     @GetMapping(DEFAULT_PAGE_URL + LOGIN_PAGE_URL)
-    public String loginPage(Model model) {
+    public String loginPage(Model model, HttpSession session) {
+        if (isLoggedIn(session)) {
+            return "redirect:" + DEFAULT_PAGE_URL + PROFILE_PAGE_URL;
+        }
         model.addAttribute("loginDTO", new LoginDTO());
         return LOGIN_PAGE_URL; // hittar filen i src/main/resources/templates/login.html
     }
@@ -96,7 +99,10 @@ public class PersonController {
      * @return The register view found in /resources/templates
      */
     @GetMapping(DEFAULT_PAGE_URL + REGISTER_PAGE_URL)
-    public String registerPage(Model model) {
+    public String registerPage(Model model, HttpSession session) {
+        if (isLoggedIn(session)) {
+            return "redirect:" + DEFAULT_PAGE_URL + PROFILE_PAGE_URL;
+        }
         model.addAttribute("registerDTO", new RegisterDTO());
         return REGISTER_PAGE_URL; // hittar filen i src/main/resources/templates/register.html
     }
