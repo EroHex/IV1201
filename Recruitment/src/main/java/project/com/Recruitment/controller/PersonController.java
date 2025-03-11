@@ -83,7 +83,8 @@ public class PersonController {
     /**
      * Method to show the login page
      * @param model
-     * @return The login view found in /resources/templates
+     * @param session
+     * @return The login view found in /resources/templates if user is not logged in, otherwise the profile view
      */
     @GetMapping(DEFAULT_PAGE_URL + LOGIN_PAGE_URL)
     public String loginPage(Model model, HttpSession session) {
@@ -96,7 +97,8 @@ public class PersonController {
     /**
      * Method to show the register page
      * @param model
-     * @return The register view found in /resources/templates
+     * @param session
+     * @return The register view found in /resources/templates if user is not logged in, otherwise the profile view
      */
     @GetMapping(DEFAULT_PAGE_URL + REGISTER_PAGE_URL)
     public String registerPage(Model model, HttpSession session) {

@@ -6,11 +6,11 @@ This web application allows users to register, login and create a job applicatio
 
 ### Prerequisites 
 - Maven
-- Java
+- Java (17 or newer)
 - PostgreSQL
 
 ### Setup
-1. Create a database in PostgreSQL and use this script to fill the database with initial data.
+1. Create a database in PostgreSQL and use the script located at `IV1201\Recruitment\existing-database.sql` to fill the database with initial data.
 2. Update the `IV1201\Recruitment\src\main\resources\application.properties` file with your PostgreSQL credentials.
 3. Open cmd and change directory to the Recruitment directory with ```cd IV1201\Recruitment```
 4. Build the project with ```mvn clean install```
