@@ -2,6 +2,7 @@
 This is the job recruitment application built using spring boot for IV1201.
 This web application allows users to register, login and create a job application. While admins can manage the job applications.
 
+Link to deployed application: https://iv1201-deployment-production.up.railway.app
 ## How to run the application locally
 
 ### Prerequisites 
